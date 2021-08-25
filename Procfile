@@ -1,1 +1,1 @@
-web: gunicorn 142testGIT.py:app
+web: gunicorn 142testGIT:app
