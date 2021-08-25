@@ -4,7 +4,7 @@ from flask import Flask, request
 app = Flask(__name__)
 @app.route('/')
 def hello():
-  return 'hello world'
+  return "hello doctor, if this site opened that s mean that our connection github/heroku has succeded and yes we can do hosting with heroku anyone can acces this site"
 
 
 
