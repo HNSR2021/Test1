@@ -2,7 +2,7 @@ from flask import Flask, request
 
 
 app = Flask(__name__)
-@app.route('https://flasktestapp-test.herokuapp.com/')
+@app.route('/')
 def hello():
   return 'hello world'
 
