@@ -1,28 +1,51 @@
-from flask import Flask, request
+import sys, os
 
+from flask import Flask, request
+from pymessenger import Bot
 
 app = Flask(__name__)
-@app.route('/')
-def hello():
-  return "hello doctor, if this site opened that s mean that our connection github/heroku has succeded and yes we can do hosting with heroku anyone can acces this site"
+
+PAGE_ACCES_TOKEN = "EABCGywjZCucABABuUP6yFpp0yEfg8wosV7ZCWPZAbE9Gcn6ZAZCzouuwoL8G4tEYjZAY8gOgJiuib38gqB9xdWNc30ZAHPPo7ZC9GrgFhUNEH0lzzapC1jDpHLj5XszVjYr5RXEnu7YtE05hMjKnpOqrIxR26AZCVQLehjqL4qnwHZA85xKrpBs1EH0TtGZABobMPAZD"
+
+bot = Bot(PAGE_ACCES_TOKEN)
 
 
+@app.route('/', methods=['GET'])
+def verify():
+    if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
+        if not request.args.get("hub.verify_token") == "secret":
+            return "Verification token mismatch", 403
+        return request.args["hub.challenge"], 200
+    return "Hello world", 200
 
-# @app.route('/', methods=["POST", "GET"])
-# def webhook():
-   # if request.method == "GET":
-      #  return "Not connected to DF"
-   # elif request.method == "POST":
-     #   payload = request.json
-     #   user_response = (payload['queryResult']['queryText'])
-     #   bot_response = (payload['queryResult']['fulfillmentText'])
-      #  if user_response or bot_response != "":
-         #   print("user: " + user_response)
-        #    print("bot: " + bot_response)
-      #  return "msg received"
-   # else:
-      #  print("request.data")
-      #  return "200"
+
+@app.route('/', methods=['POST'])
+def webhook():
+    data = request.get_json()
+    log(data)
+
+    if data['object'] == 'page':
+        for entry in data['entry']:
+            for messaging_event in entry['messaging']:
+
+                #IDS
+                sender_id = messaging_event['sender']['id']
+                recipient_id = messaging_event['recipient']['id']
+
+                if messaging_event.get('message'):
+                    if 'text' in messaging_event['message']:
+                        messaging_text = messaging_event['message']['text']
+                    else:
+                        messaging_text = 'no text'
+                    # ECHO
+                    response = messaging_text
+                    bot.send_text_message(sender_id, response)
+    return 'ok', 200
+
+
+def log(message):
+    print(message)
+    sys.stdout.flush()
 
 
 if __name__ == '__main__':
