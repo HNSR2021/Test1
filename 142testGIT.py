@@ -5,7 +5,7 @@ from pymessenger import Bot
 
 app = Flask(__name__)
 
-PAGE_ACCES_TOKEN = "EABCGywjZCucABABuUP6yFpp0yEfg8wosV7ZCWPZAbE9Gcn6ZAZCzouuwoL8G4tEYjZAY8gOgJiuib38gqB9xdWNc30ZAHPPo7ZC9GrgFhUNEH0lzzapC1jDpHLj5XszVjYr5RXEnu7YtE05hMjKnpOqrIxR26AZCVQLehjqL4qnwHZA85xKrpBs1EH0TtGZABobMPAZD"
+PAGE_ACCES_TOKEN = "YourAccesToken"
 
 bot = Bot(PAGE_ACCES_TOKEN)
 
@@ -13,7 +13,7 @@ bot = Bot(PAGE_ACCES_TOKEN)
 @app.route('/', methods=['GET'])
 def verify():
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
-        if not request.args.get("hub.verify_token") == "secret":
+        if not request.args.get("hub.verify_token") == "YourVerifyToken":
             return "Verification token mismatch", 403
         return request.args["hub.challenge"], 200
     return "Hello world", 200
